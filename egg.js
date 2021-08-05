@@ -55,6 +55,26 @@ function parse(program) {
 
 const specialForms = Object.create(null);
 
+specialForms.if = (args, scope) => {
+    if (args.length != 3) {
+        throw new SyntaxError("Wrong number of args to if");
+    } else if (evaluate(args[0], scope) !== false) {
+        return evaluate(args[1], scope); 
+    } else {
+        return evaluate(args[2], scope);
+    }
+}
+
+specialForms.while = (args, scope) => {
+    if (args.length != 2) {
+        throw new SyntaxError("Wrong number of args");
+    }
+    while (evaluate(args[0], scope) !== false) {
+        evaluate(args[1], scope);
+    }
+    return false; // since undefined does not exist in egg
+}
+
 function evaluate(expr, scope) {
     if (expr.type == "value") {
         return expr.value;
